@@ -1,45 +1,81 @@
-import React from 'react';
+import { addDoc, collection, doc, updateDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { actAddToCartRequest, updataQuantityRequest } from '../../../../redux/actions/cartAction';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useUserAuth } from "../../../../context/UserAuthContext";
+import { db } from '../../../../firebase/firebase-config';
+import { addToCart } from '../../../../redux/actions/cartAction';
+import Loading from "../../../../common/loading/Loading";
 
 const ShowProductDetail = () => {
 
-    const user = JSON.parse(localStorage.getItem("user"));
-    const product = useSelector((state) => state.products.products);
-    const userCart = useSelector((state) => state.cart.products);
+    const { id } = useParams();
+    const cartCollectionRef = collection(db, "cart");
+    const products = useSelector((state) => state.products.products);
+    const cartData = useSelector((state) => state.cart.userCartData);
+    const [isLoading, setIsLoading] = useState(true);
+    const [product, setProduct] = useState([]);
+    const [isExist, setIsExist] = useState(false);
+    const [data, setData] = useState({});
+    const { user } = useUserAuth();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    var vndCurrency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
+    useEffect(() => {
+        if (products.length > 0) {
+            products.map((product) => {
+                if (user && product.id === id) {
+                    setProduct(product);
+                    setData(prev => ({
+                        ...prev,
+                        uid: user.uid,
+                        pid: product.id,
+                        desc: product.desc,
+                        img: product.img,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1,
+                        type: product.type,
+                    }))
+                    setIsLoading(false);
+                } else if (product.id === id) {
+                    setProduct(product)
+                    setIsLoading(false);
+                }
+            })
+        }
+    }, [products]);
 
-    const onAddToCart = (e) => {
+    useEffect(() => {
+        if (cartData.length > 0 && user) {
+            cartData.map((cartItem) => {
+                if (cartItem.pid === id && user.uid === cartItem.uid) {
+                    setIsExist(true);
+                    setIsLoading(false);
+                }
+            })
+        }
+    }, [cartData]);
+
+    var changedCurrency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
+
+    const onAddToCart = async (e) => {
         e.preventDefault();
-        if (!user) {
-            alert("Bạn cần đăng nhập để mua !");
+        if (user === null) {
+            alert("Bạn phải đăng nhập để thực hiện hành động !");
+            navigate("/login");
         } else {
-            var result = userCart.filter((usercart) => usercart.product.id === product.id);
-            if (result.length === 1) {
-                console.log(result)
-                let text = "Đã có trong giỏ hàng bạn muốn thêm nữa chứ ?";
-                if (window.confirm(text) === true) {
-                    result[0].quantity += 1;
-                    dispatch(updataQuantityRequest(user.id, result[0].id, result[0]));
-                }
-            } else {
-                console.log(result)
-                const data = {
-                    product: product,
-                    quantity: 1
-                }
-                dispatch(actAddToCartRequest(user.id, data));
+            try {
+                await addDoc(cartCollectionRef, data);
+                dispatch(addToCart(data));
+            } catch (err) {
+                alert(err);
             }
         }
     }
 
-    const onVerify = () => {
-        if(!user) {
-            alert("Bạn cần đăng nhập để xem trang này !");
-        }
+    if (isLoading) {
+        return <Loading />;
     }
 
     return (
@@ -48,12 +84,17 @@ const ShowProductDetail = () => {
                 <img src={product.img} alt={product.name} width="400px" height="400px" />
             </div>
             <div className="col-md-6">
-                <h4 className="text-uppercase text-black-50">{product.type}</h4>
-                <h1 className="display-t">{product.name}</h1>
-                <h3 className="display-6 fw-bold my-4">{vndCurrency}</h3>
-                <p className="lead">{product.detail}</p>
-                <button className="btn btn-outline-dark" onClick={onAddToCart}>Thêm vào giỏ hàng</button>
-                <NavLink to={user ? "/cart" : ""} className="btn btn-dark ms-2 px-3 py-2" onClick={onVerify}>Đến giỏ hàng</NavLink>
+                <h4 className="text-uppercase text-black-50">Tên sản phẩm: {product.name}</h4>
+                <h1 className="display-t">Loại: {product.type}</h1>
+                <h3 className="display-6 fw-bold my-2">Giá: {changedCurrency}</h3>
+                <p className="lead">Mô tả: {product.desc}</p>
+                {
+                    isExist ?
+                        <div className="btn btn-outline-danger disabled" >Đã ở trong giỏ hàng</div>
+                        :
+                        <button className="btn btn-outline-dark" onClick={onAddToCart} >Thêm vào giỏ hàng</button>
+                }
+                <NavLink to={user ? "/cart" : "/login"} className="btn btn-dark ms-2 px-3 py-2">Đến giỏ hàng</NavLink>
             </div>
         </>
     );

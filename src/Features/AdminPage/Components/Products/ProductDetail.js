@@ -1,18 +1,20 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { deleteProductRequest } from '../../../../redux/actions/productAction';
+import { deleteProduct } from '../../../../redux/actions/productAction';
+import { useUserAuth } from "../../../../context/UserAuthContext";
 
 const ProductDetail = (props) => {
 
+    const { deleteProductFirebase } = useUserAuth();
     const { product, index } = props;
     const dispatch = useDispatch();
-    var vndCurrency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
 
-    const handleDelete = (product_id) => {
-        if(window.confirm("Bạn có muốn xóa chứ ?")) {
-            dispatch(deleteProductRequest(product_id));
-        }
+    var changedCurrency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(product.price);
+
+    const onDelete = async (id) => {
+        await deleteProductFirebase(id);
+        dispatch(deleteProduct(id));
     }
 
     return (
@@ -23,11 +25,11 @@ const ProductDetail = (props) => {
             </td>
             <td>{product.name}</td>
             <td>{product.type}</td>
-            <td>{vndCurrency}</td>
+            <td>{changedCurrency}</td>
             <td>{product.quantity}</td>
             <td>
                 <NavLink to={`actions/${product.id}/edit`} className="btn btn-outline-dark w-25">Sửa</NavLink>
-                <button className="btn btn-outline-danger w-25 ms-2" onClick={() =>handleDelete(product.id)}>Xóa</button>
+                <button className="btn btn-outline-danger w-25 ms-2" onClick={() => onDelete(product.id)}>Xóa</button>
             </td>
         </tr>
     );

@@ -1,72 +1,43 @@
 import * as types from "../contants/actionTypes";
-import cartApi from "../../api/cartApi";
 
-export const isLoading = () => {
+export const getAllCartData = (data) => {
     return {
-        type: types.IS_LOADING,
+        type: types.GET_ALL_CART,
+        payload: data
     }
 }
 
-// export const isAddToCart = () => {
-//     return {
-//         type: types.IS_ADD_TO_CART,
-//     }
-// }
-
-export const fetchUserCart = (carts) => {
-    return {
-        type: types.FETCH_USER_CART,
-        payload: carts
-    }
-}
-
-export const fetchUserCartRequest = (id) => {
-    return async (dispatch) => {
-        dispatch(isLoading());
-        const response = await cartApi.getAll(id);
-        dispatch(fetchUserCart(response));
-    }
-}
-
-export const actAddToCart = (product) => {
+export const addToCart = (data) => {
     return {
         type: types.ADD_TO_CART,
-        payload: product
+        payload: data
     }
 }
 
-export const actAddToCartRequest = (userId, data) => {
-    return async (dispatch) => {
-        // dispatch(isAddToCart());
-        const response = await cartApi.addToCart(userId, data);
-        dispatch(actAddToCart(response));
-    }
-}
-
-export const updataQuantity = (product) => {
+export const increaseQuantity = (id) => {
     return {
-        type: types.UPDATE_QUANTITY,
-        payload: product
-    }
-}
-
-export const updataQuantityRequest = (userId, cartId, data) => {
-    return async (dispatch) => {
-        const response = await cartApi.updateQuantity(userId, cartId, data);
-        dispatch(updataQuantity(response));
-    }
-}
-
-export const deleteItem = (id) => {
-    return {
-        type: types.DELETE_ITEM,
+        type: types.INCREASE_QUANTITY,
         payload: id
     }
 }
 
-export const deleteItemRequest = (userId, cartId) => {
-    return async (dispatch) => {
-        const response = await cartApi.removeItem(userId, cartId);
-        dispatch(deleteItem(response));
+export const decreaseQuantity = (id) => {
+    return {
+        type: types.DECREASE_QUANTITY,
+        payload: id
+    }
+}
+
+export const deleteUserCartProduct = (id) => {
+    return {
+        type: types.DELETE_USER_CART_PRODUCT,
+        payload: id
+    }
+}
+
+export const getUserCartData = (data) => {
+    return {
+        type: types.GET_USER_CART_DATA,
+        payload: data
     }
 }

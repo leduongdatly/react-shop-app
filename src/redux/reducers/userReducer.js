@@ -5,41 +5,22 @@ const initialState = {
 }
 
 const userReducer = (state = initialState, action) => {
-    const users = state.users;
+    var data = null;
     switch (action.type) {
-        case types.FETCH_USER:
+        case types.GET_ALL_USER:
+            data = action.payload;
             return {
                 ...state,
-                users: action.payload,
+                users: data
             }
-        case types.ADD_USER:
-            const user = [action.payload];
+        case types.UPDATE_USER_ROLE:
+            data = state.users.map((user) =>
+                user.id === action.payload ? {...user, role: user.role === "admin" ? "customer" : "admin"} : user 
+            )
             return {
                 ...state,
-                users: users.concat(user),
+                users: data
             }
-        case types.DELETE_USER:
-            const newUsers = users.filter((user) => user.id !== action.payload.id);
-            return {
-                ...state,
-                users: newUsers,
-            }
-        case types.UPDATE_USER:
-            // const newUsers1 = users.filter((user) => user.id !== action.payload.id);
-            // const user1 = [action.payload];
-            return {
-                ...state,
-                users: users.map((user) => 
-                    user.id === action.payload.id ? action.payload : user 
-                )
-            }
-        // case types.FETCH_USER_BY_ID:
-        //     console.log(action);
-        //     return {
-        //         ...state,
-        //         users: action.payload,
-        //         isLogin: true
-        //     }
         default: return state
     }
 }

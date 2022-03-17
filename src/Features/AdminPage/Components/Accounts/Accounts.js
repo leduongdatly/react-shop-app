@@ -19,8 +19,6 @@ const Accounts = () => {
     }
 
     const headers = [
-        { label: "Tên đăng nhập", key: "username" },
-        { label: "Mật khẩu", key: "password" },
         { label: "Email", key: "email" },
     ]
 
@@ -33,18 +31,14 @@ const Accounts = () => {
     return (
         <div className="container">
             <div className="mt-3">
-                <NavLink to="action/add" className="btn btn-outline-dark">Thêm mới Tài khoản</NavLink>
-                <CSVLink {...csvReport} className="btn btn-outline-success mx-2">Xuất dữ liệu người dùng</CSVLink>
+                <CSVLink {...csvReport} className="btn btn-outline-success mx-2">Xuất email người dùng</CSVLink>
             </div>
             <table className="table table-striped table-hover table-bordered mt-3">
                 <thead>
                     <tr>
                         <th scope="col">STT</th>
-                        <th scope="col">Tên tài khoản</th>
-                        <th scope="col">mật khẩu</th>
-                        <th scope="col">email</th>
+                        <th scope="col">Email</th>
                         <th scope="col">Quyền</th>
-                        <th scope="col">Hành động</th>
                     </tr>
                 </thead>
                 <tbody>

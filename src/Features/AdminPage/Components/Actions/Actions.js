@@ -1,26 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { addProductRequest, updateProductRequest } from '../../../../redux/actions/productAction';
+import { addProduct, updateProduct } from '../../../../redux/actions/productAction';
 import ActionsForm from './ActionsForm';
+import { useUserAuth } from '../../../../context/UserAuthContext';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Actions = () => {
 
     const dispatch = useDispatch();
-    const { id } = useParams();
     const navigate = useNavigate();
+    const { id } = useParams();
 
-    const onGetData = (data) => {
-        if (data.name === "" || data.type === "" || data.detail === "" || data.price === "" || data.img === "" || data.quantity === "") {
-            alert("Vui lòng điền đầy đủ thông tin !");
+    const { addProductFirebase, updateProductFirebase } = useUserAuth();
+
+    const onGetData = async (data) => {
+        if (data.id) {
+            await updateProductFirebase(data, data.id);
+            dispatch(updateProduct(data));
+            navigate("/admin");
         } else {
-            if (data.id) {
-                dispatch(updateProductRequest(data.id, data));
-                navigate("/admin/products");
-            } else {
-                dispatch(addProductRequest(data));
-                navigate("/admin/products");
-            }
+            await addProductFirebase(data);
+            dispatch(addProduct(data));
+            navigate("/admin");
         }
     }
 
@@ -29,7 +30,7 @@ const Actions = () => {
             <div className="col-12 mb-4">
                 <h1 className="text-center">{id ? "Cập nhật sản phẩm" : "Thêm mới sản phẩm"}</h1>
             </div>
-            <ActionsForm onGetData={onGetData} />
+            <ActionsForm onGetData={onGetData} pid={id} />
         </div>
     );
 };

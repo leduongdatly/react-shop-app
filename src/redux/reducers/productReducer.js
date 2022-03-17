@@ -2,51 +2,35 @@ import * as types from "../contants/actionTypes";
 
 const initialState = {
     products: [],
-    isLoading: false
 }
 
 const productReducer = (state = initialState, action) => {
-    const products = state.products;
+    var data = null;
     switch (action.type) {
-        case types.IS_LOADING:
+        case types.GET_ALL_PRODUCT:
+            data = action.payload;
             return {
                 ...state,
-                products: [],
-                isLoading: true
-            }
-        case types.FETCH_PRODUCT:
-            return {
-                ...state,
-                products: action.payload,
-                isLoading: false
-            }
-        case types.FETCH_PRODUCT_BY_ID:
-            return {
-                ...state,
-                products: action.payload,
-                isLoading: false
-            }
-        case types.ADD_PRODUCT:
-            const product = [action.payload];
-            return {
-                ...state,
-                products: products.concat(product),
-                isLoading: false
+                products: data,
             }
         case types.DELETE_PRODUCT:
-            const newProducts = products.filter((products) => products.id !== action.payload.id);
+            data = state.products.filter((product) => product.id !== action.payload);
             return {
                 ...state,
-                products: newProducts,
-                isLoading: false
+                products: data,
+            }
+        case types.ADD_PRODUCT:
+            data = state.products.concat([action.payload]);
+            return {
+                ...state,
+                products: data,
             }
         case types.UPDATE_PRODUCT:
+            data = [action.payload];
+            var newField = state.products.filter((product) => product.id !== action.payload.id);
             return {
                 ...state,
-                products: products.map((product) => 
-                    product.id === action.payload.id ? action.payload : product
-                ),
-                isLoading: false,
+                products: newField.concat(data),
             }
         default: return state
     }

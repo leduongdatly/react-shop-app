@@ -9,9 +9,9 @@ const Products = () => {
 
     const showProduct = () => {
         var result = null;
-        if(products.length > 0) {
+        if (products.length > 0) {
             result = products.map((product, index) => {
-                return  <ProductDetail key={index} product={product} index={index} />;
+                return <ProductDetail key={index} product={product} index={index} />
             })
         }
         return result;

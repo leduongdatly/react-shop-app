@@ -1,48 +1,52 @@
 import * as types from "../contants/actionTypes";
 
 const initialState = {
-    products: [],
-    isLoading: false,
+    cartData: [],
+    userCartData: []
 }
 
 const userReducer = (state = initialState, action) => {
-    const products = state.products;
+    var data = null;
     switch (action.type) {
-        case types.IS_LOADING:
+        case types.GET_ALL_CART:
+            data = action.payload;
             return {
                 ...state,
-                isLoading: true,
+                cartData: data
             }
-        case types.FETCH_USER_CART:
+        case types.GET_USER_CART_DATA:
+            data = action.payload;
             return {
                 ...state,
-                products: action.payload,
-                isLoading: false,
+                userCartData: data
             }
         case types.ADD_TO_CART:
-            const product = [action.payload];
+            data = [action.payload];
             return {
                 ...state,
-                products: products.concat(product),
-                isLoading: false,
+                userCartData: state.userCartData.concat(data),
             }
-        case types.UPDATE_QUANTITY:
-            const exist = products.find((x) => x.id === action.payload.id);
-            if (exist) {
-                return {
-                    ...state,
-                    products: products.map((x) =>
-                        x.id === action.payload.id ? { ...x, quantity: action.payload.quantity } : x
-                    ),
-                    isLoading: false,
-                }
-            }
-        case types.DELETE_ITEM:
-            const newArr = products.filter((products) => products.id !== action.payload.id);
+        case types.INCREASE_QUANTITY:
+            data = state.userCartData.map((cartItem) =>
+                cartItem.pid === action.payload ? { ...cartItem, quantity: cartItem.quantity += 1 } : cartItem
+            )
             return {
                 ...state,
-                products: newArr,
-                isLoading: false,
+                userCartData: data
+            }
+        case types.DECREASE_QUANTITY:
+            data = state.userCartData.map((cartItem) =>
+                cartItem.pid === action.payload ? { ...cartItem, quantity: cartItem.quantity -= 1 } : cartItem
+            )
+            return {
+                ...state,
+                userCartData: data
+            }
+        case types.DELETE_USER_CART_PRODUCT:
+            data = state.userCartData.filter((cartItem) => cartItem.id !== action.payload);
+            return {
+                ...state,
+                userCartData: data
             }
         default: return state
     }

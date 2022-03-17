@@ -1,21 +1,23 @@
 // PRODUCT
-export const IS_LOADING = "IS_LOADING";
-export const FETCH_PRODUCT = "FETCH_PRODUCT";
-export const FETCH_PRODUCT_BY_ID = "FETCH_PRODUCT_BY_ID";
-export const ADD_PRODUCT = "ADD_PRODUCT";
+export const GET_ALL_PRODUCT = "GET_ALL_PRODUCT";
 export const DELETE_PRODUCT = "DELETE_PRODUCT";
+export const ADD_PRODUCT = "ADD_PRODUCT";
 export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 
+// TYPE
+export const GET_ALL_TYPE = "GET_ALL_TYPE";
+export const ADD_TYPE = "ADD_TYPE";
+export const DELETE_TYPE = "DELETE_TYPE";
+export const UPDATE_TYPE = "UPDATE_TYPE";
+
 // USER
-export const FETCH_USER = "FETCH_USER";
-export const ADD_USER = "ADD_USER";
-export const DELETE_USER = "DELETE_USER";
-export const UPDATE_USER = "UPDATE_USER";
-// export const FETCH_USER_BY_ID = "FETCH_USER_BY_ID";
+export const GET_ALL_USER = "GET_ALL_USER";
+export const UPDATE_USER_ROLE = "UPDATE_USER_ROLE";
 
 // CART
-export const FETCH_USER_CART = "FETCH_USER_CART";
+export const GET_ALL_CART = "GET_ALL_CART";
 export const ADD_TO_CART = "ADD_TO_CART";
-export const UPDATE_QUANTITY = "UPDATE_QUANTITY";
-export const IS_ADD_TO_CART = "IS_ADD_TO_CART";
-export const DELETE_ITEM = "DELETE_ITEM";
+export const INCREASE_QUANTITY = "INCREASE_QUANTITY";
+export const DECREASE_QUANTITY = "DECREASE_QUANTITY";
+export const DELETE_USER_CART_PRODUCT = "DELETE_USER_CART_PRODUCT";
+export const GET_USER_CART_DATA = "GET_USER_CART_DATA";

@@ -13,6 +13,9 @@ const Menus = () => {
                         <li className="nav-item">
                             <NavLink to="users" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} href="#">Tài khoản</NavLink>
                         </li>
+                        <li className="nav-item">
+                            <NavLink to="category" className={({ isActive }) => isActive ? "nav-link active" : "nav-link"} href="#">Loại sản phẩm</NavLink>
+                        </li>
                     </ul>
                 </div>
             </div>

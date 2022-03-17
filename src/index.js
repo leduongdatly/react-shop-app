@@ -8,12 +8,15 @@ import './index.css';
 import store from './redux/store';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { UserAuthContextProvider } from './context/UserAuthContext';
 
 ReactDOM.render(
   <BrowserRouter>
-    <Provider store={store}>
-      <App />
-    </Provider>
+    <UserAuthContextProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </UserAuthContextProvider>
   </BrowserRouter>,
   document.getElementById('root')
 );

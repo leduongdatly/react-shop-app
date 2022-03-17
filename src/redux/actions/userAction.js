@@ -1,73 +1,15 @@
 import * as types from "../contants/actionTypes";
-import userApi from "../../api/userApi";
 
-export const fetchUser = (users) => {
+export const getAllUsers = (users) => {
     return {
-        type: types.FETCH_USER,
+        type: types.GET_ALL_USER,
         payload: users
     }
 }
 
-export const fetchUserRequest = () => {
-    return async (dispatch) => {
-        const response = await userApi.getAll();
-        dispatch(fetchUser(response));
-    }
-}
-
-export const addUser = (user) => {
+export const updateUserRole = (id) => {
     return {
-        type: types.ADD_USER,
-        payload: user
+        type: types.UPDATE_USER_ROLE,
+        payload: id
     }
 }
-
-export const addUserRequest = (data) => {
-    return async (dispatch) => {
-        const response = await userApi.addUser(data);
-        dispatch(addUser(response));
-    }
-}
-
-export const deleteUser = (user) => {
-    return {
-        type: types.DELETE_USER,
-        payload: user
-    }
-}
-
-export const deleteUserRequest = (id) => {
-    return async (dispatch) => {
-        const response = await userApi.deleteUser(id);
-        dispatch(deleteUser(response));
-    }
-}
-
-export const updateUser = (user) => {
-    return {
-        type: types.UPDATE_USER,
-        payload: user
-    }
-}
-
-export const updateUserRequest = (id, data) => {
-    return async (dispatch) => {
-        // dispatch(isLoading());
-        const response = await userApi.updateUser(id, data);
-        dispatch(updateUser(response));
-    }
-}
-
-// export const fetchUserById = (user) => {
-//     return {
-//         type: types.FETCH_USER_BY_ID,
-//         payload: user
-//     }
-// }
-
-// export const fetchUserByIdRequest = (id) => {
-//     return async (dispatch) => {
-//         const response = await userApi.addUser(id);
-//         dispatch(fetchUserById(response));
-//     }
-// }
